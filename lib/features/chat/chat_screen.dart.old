@@ -1,0 +1,331 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_spacing.dart';
+import '../../core/theme/app_text_styles.dart';
+import '../../core/theme/app_radius.dart';
+import '../../core/widgets/badges.dart';
+
+/// ChatScreen - Chat hub screen
+///
+/// Features:
+/// - List of active negotiation rooms
+/// - Read-only closed deals
+/// - Real-time message indicators
+/// - User avatars and status
+/// - Search functionality
+class ChatScreen extends ConsumerStatefulWidget {
+  const ChatScreen({super.key});
+
+  @override
+  ConsumerState<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends ConsumerState<ChatScreen> {
+  int _selectedTab = 0; // 0: Active, 1: Closed
+
+  final List<Map<String, dynamic>> _activeChats = [
+    {
+      'id': '1',
+      'userName': 'GamerPro99',
+      'avatarUrl': 'https://via.placeholder.com/50',
+      'lastMessage': 'I can accept the deal',
+      'time': '2m ago',
+      'unreadCount': 3,
+      'status': 'active',
+      'dealTitle': 'PUBG Account - Level 100',
+    },
+    {
+      'id': '2',
+      'userName': 'NightHawk',
+      'avatarUrl': 'https://via.placeholder.com/50',
+      'lastMessage': 'Payment screenshot sent',
+      'time': '1h ago',
+      'unreadCount': 1,
+      'status': 'active',
+      'dealTitle': 'Free Fire Elite Pass',
+    },
+  ];
+
+  final List<Map<String, dynamic>> _closedDeals = [
+    {
+      'id': '3',
+      'userName': 'ShadowHunter',
+      'avatarUrl': 'https://via.placeholder.com/50',
+      'lastMessage': 'Deal completed successfully',
+      'time': '1d ago',
+      'unreadCount': 0,
+      'status': 'completed',
+      'dealTitle': 'COD Mobile Account',
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: Column(
+        children: [
+          // Header
+          Padding(
+            padding: const EdgeInsets.all(AppSpacing.screenPadding),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Messages',
+                  style: AppTextStyles.heading1,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () {
+                    // Show search
+                  },
+                ),
+              ],
+            ),
+          ),
+
+          // Tab Selector
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.surface,
+                borderRadius: AppRadius.chipBorder,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedTab = 0;
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
+                        decoration: BoxDecoration(
+                          color: _selectedTab == 0 ? AppColors.primary : Colors.transparent,
+                          borderRadius: AppRadius.chipBorder,
+                        ),
+                        child: Text(
+                          'Active',
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: _selectedTab == 0 ? AppColors.background : AppColors.textSecondary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedTab = 1;
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
+                        decoration: BoxDecoration(
+                          color: _selectedTab == 1 ? AppColors.primary : Colors.transparent,
+                          borderRadius: AppRadius.chipBorder,
+                        ),
+                        child: Text(
+                          'Closed',
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: _selectedTab == 1 ? AppColors.background : AppColors.textSecondary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: AppSpacing.m),
+
+          // Chat List
+          Expanded(
+            child: _selectedTab == 0 ? _buildActiveChats() : _buildClosedDeals(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActiveChats() {
+    if (_activeChats.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.chat_bubble_outline,
+              size: 64,
+              color: AppColors.textSecondary,
+            ),
+            const SizedBox(height: AppSpacing.m),
+            Text(
+              'No active chats',
+              style: AppTextStyles.bodyLarge.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+      itemCount: _activeChats.length,
+      itemBuilder: (context, index) {
+        final chat = _activeChats[index];
+        return _buildChatItem(chat);
+      },
+    );
+  }
+
+  Widget _buildClosedDeals() {
+    if (_closedDeals.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.history,
+              size: 64,
+              color: AppColors.textSecondary,
+            ),
+            const SizedBox(height: AppSpacing.m),
+            Text(
+              'No closed deals',
+              style: AppTextStyles.bodyLarge.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+      itemCount: _closedDeals.length,
+      itemBuilder: (context, index) {
+        final deal = _closedDeals[index];
+        return _buildChatItem(deal);
+      },
+    );
+  }
+
+  Widget _buildChatItem(Map<String, dynamic> chat) {
+    return GestureDetector(
+      onTap: () {
+        // Navigate to chat detail
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: AppSpacing.s),
+        padding: const EdgeInsets.all(AppSpacing.m),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: AppRadius.cardBorder,
+          border: Border.all(
+            color: AppColors.border,
+            width: 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            // Avatar
+            Stack(
+              children: [
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.border,
+                  ),
+                  child: const Icon(
+                    Icons.person,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                if (chat['unreadCount'] != null && (chat['unreadCount'] as int) > 0)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: NotificationBadge(
+                      count: chat['unreadCount'] as int,
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(width: AppSpacing.m),
+
+            // Info
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        chat['userName'] as String,
+                        style: AppTextStyles.bodyLarge,
+                      ),
+                      if (chat['status'] != null)
+                        StatusBadge(
+                          status: chat['status'] as String,
+                          isUppercase: false,
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    chat['dealTitle'] as String? ?? '',
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          chat['lastMessage'] as String,
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Text(
+                        chat['time'] as String,
+                        style: AppTextStyles.caption.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

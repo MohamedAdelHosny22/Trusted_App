@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(cd:*)",
+      "Bash(flutter analyze:*)",
+      "Bash(claude plugin:*)",
+      "mcp__plugin_figma_figma__get_design_context",
+      "Bash(flutter clean:*)",
+      "Bash(flutter doctor:*)",
+      "Bash(dir:*)",
+      "Bash(ls:*)",
+      "Bash(flutter build:*)",
+      "Bash(flutter run:*)",
+      "mcp__plugin_figma_figma__get_screenshot",
+      "Bash(wc:*)",
+      "Bash(mkdir:*)",
+      "mcp__plugin_figma_figma__get_metadata",
+      "Bash(mcp call:*)",
+      "mcp__figma-local__add_figma_file",
+      "mcp__figma-local__view_node",
+      "mcp__figma-local__read_comments",
+      "mcp__web-reader__webReader",
+      "Bash(flutter pub:*)",
+      "mcp__zai-mcp-server__ui_to_artifact",
+      "mcp__zai-mcp-server__analyze_image",
+      "mcp__plugin_figma_figma__whoami",
+      "Bash(echo:*)"
+    ]
+  }
+}
