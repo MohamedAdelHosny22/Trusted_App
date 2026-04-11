@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
@@ -170,7 +171,7 @@ class _SellListingContentState extends State<_SellListingContent> {
           Icons.arrow_back_ios_new,
           color: AppColors.textPrimary,
         ),
-        onPressed: () => Navigator.pop(context),
+        onPressed: () => context.go('/main?tab=0'),
       ),
       centerTitle: true,
       title: Text(

@@ -18,6 +18,7 @@ import '../../features/chat/presentation/screens/chat_detail_screen.dart';
 import '../../features/chat/data/models/chat_model.dart';
 import '../../features/profile/presentation/screens/all_listings_screen.dart';
 import '../../features/profile/presentation/screens/add_listing_screen.dart';
+import '../../features/sell/presentation/screens/sell_listing_screen.dart';
 import '../../core/widgets/main_nav_shell.dart';
 
 /// App Router Configuration
@@ -92,11 +93,12 @@ class AppRouter {
           path: '/main',
           name: 'main',
           pageBuilder: (context, state) {
-            // Get initial tab index from query parameter or default to 4 (profile)
+            // Get initial tab index from query parameter or default to 3 (profile)
+            // Updated: Removed Sell tab, so indices are: 0=Home, 1=Buy, 2=Chats, 3=Profile
             final initialTab = int.tryParse(
-                  state.uri.queryParameters['tab'] ?? '4',
+                  state.uri.queryParameters['tab'] ?? '3',
                 ) ??
-                4;
+                3;
 
             return MaterialPage(
               key: state.pageKey,
@@ -256,6 +258,18 @@ class AppRouter {
             return MaterialPage(
               key: state.pageKey,
               child: const AddListingScreen(),
+            );
+          },
+        ),
+
+        // Sell Listing Screen (Full screen, no nav bar)
+        GoRoute(
+          path: '/sell/new',
+          name: 'sell-listing',
+          pageBuilder: (context, state) {
+            return MaterialPage(
+              key: state.pageKey,
+              child: const SellListingScreen(),
             );
           },
         ),

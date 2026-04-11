@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 
 /// ProfileBottomNav - Bottom navigation bar matching Figma design
@@ -69,23 +70,23 @@ class ProfileBottomNav extends StatelessWidget {
                   // Space for floating sell button
                   const SizedBox(width: 56),
 
-                  // Chats (index 3)
+                  // Chats (index 2) - was index 3
                   _buildNavIcon(
                     icon: Icons.chat_bubble_outline,
                     activeIcon: Icons.chat_bubble,
                     label: 'Chats',
-                    index: 3,
-                    isSelected: currentIndex == 3,
+                    index: 2,
+                    isSelected: currentIndex == 2,
                     onTap: onTap,
                   ),
 
-                  // Profile (index 4)
+                  // Profile (index 3) - was index 4
                   _buildNavIcon(
                     icon: Icons.person_outline,
                     activeIcon: Icons.person,
                     label: 'Profile',
-                    index: 4,
-                    isSelected: currentIndex == 4,
+                    index: 3,
+                    isSelected: currentIndex == 3,
                     onTap: onTap,
                   ),
                 ],
@@ -99,9 +100,11 @@ class ProfileBottomNav extends StatelessWidget {
             left: 0,
             right: 0,
             child: Center(
-              child: _buildSellButton(
-                isSelected: currentIndex == 2,
-                onTap: () => onTap(2),
+              child: Builder(
+                builder: (context) => _buildSellButton(
+                  isSelected: false, // Never selected since it opens a new screen
+                  onTap: () => context.push('/sell/new'),
+                ),
               ),
             ),
           ),

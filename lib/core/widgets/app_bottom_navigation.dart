@@ -53,12 +53,12 @@ class AppBottomNavigation extends StatelessWidget {
                   _BottomNavItem(
                     icon: Icons.chat_bubble_outline,
                     label: 'Chats',
-                    route: '/main?tab=3',
+                    route: '/main?tab=2', // Was tab=3
                   ),
                   _BottomNavItem(
                     icon: Icons.person_outline,
                     label: 'Profile',
-                    route: '/main?tab=4',
+                    route: '/main?tab=3', // Was tab=4
                   ),
                 ],
               ),
@@ -69,7 +69,7 @@ class AppBottomNavigation extends StatelessWidget {
                 right: 0,
                 child: Center(
                   child: GestureDetector(
-                    onTap: () => context.go('/main?tab=2'),
+                    onTap: () => context.push('/sell/new'),
                     child: Container(
                       width: 56,
                       height: 56,

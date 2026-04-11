@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trusted_app/features/home/presentation/screens/home_screen.dart';
 import '../../features/buy/presentation/screens/buy_accounts_screen.dart';
-import '../../features/sell/presentation/screens/sell_screen.dart';
 import '../../features/chat/presentation/screens/chat_list_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/profile/presentation/cubit/profile_cubit.dart';
@@ -20,7 +19,7 @@ class MainNavShell extends StatefulWidget {
 
   const MainNavShell({
     super.key,
-    this.initialIndex = 4, // Default to Profile tab
+    this.initialIndex = 3, // Default to Profile tab (was 4, now 3)
   });
 
   @override
@@ -49,13 +48,10 @@ class _MainNavShellState extends State<MainNavShell> {
           // Buy Screen (index 1)
           const BuyAccountsScreen(),
 
-          // Sell Screen (index 2)
-          const SellScreen(),
-
-          // Chats Screen (index 3)
+          // Chats Screen (index 2) - was index 3
           const ChatListScreen(),
 
-          // Profile Screen (index 4) - with BlocProvider
+          // Profile Screen (index 3) - was index 4 - with BlocProvider
           BlocProvider(
             create: (context) => ProfileCubit(
               ProfileRepositoryImpl(),
