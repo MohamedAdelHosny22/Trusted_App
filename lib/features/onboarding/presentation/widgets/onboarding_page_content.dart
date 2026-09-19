@@ -5,9 +5,6 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/utils/responsive_utils.dart';
 
-/// OnboardingPageContent - Content widget for each onboarding page
-///
-/// Displays illustration, title, and subtitle for each onboarding step
 class OnboardingPageContent extends StatelessWidget {
   final String imagePath;
   final String title;
@@ -20,7 +17,6 @@ class OnboardingPageContent extends StatelessWidget {
     required this.subtitle,
   });
 
-  /// Factory constructors for each onboarding page
   factory OnboardingPageContent.page1() {
     return const OnboardingPageContent(
       imagePath: 'assets/images/onboarding_1.png',
@@ -52,13 +48,10 @@ class OnboardingPageContent extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Illustration container
           _buildIllustrationContainer(context),
           SizedBox(height: ResponsiveUtils.scaleSpacing(context, AppSpacing.xl)),
-          // Title
           _buildTitle(context),
           SizedBox(height: ResponsiveUtils.scaleSpacing(context, AppSpacing.m)),
-          // Subtitle
           _buildSubtitle(context),
         ],
       ),
@@ -70,8 +63,6 @@ class OnboardingPageContent extends StatelessWidget {
     final imageSize = screenSize.width * 0.8;
     final maxHeight = screenSize.height * 0.5;
 
-    // Ensure height is constrained properly
-    // Use max of 200 and the calculated imageSize, but ensure it doesn't exceed maxHeight
     final minHeight = 200.0;
     final calculatedHeight = imageSize < minHeight ? minHeight : imageSize;
     final finalHeight = calculatedHeight > maxHeight ? maxHeight : calculatedHeight;

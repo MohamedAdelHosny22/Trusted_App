@@ -570,10 +570,10 @@ class _AccountDetailsContentState extends State<_AccountDetailsContent> {
   String _formatPriceInEGP(double priceInUSD) {
     // Convert USD to EGP (approximate rate: 1 USD = 48 EGP)
     final priceInEGP = priceInUSD * 48;
-    return '${priceInEGP.toInt().toString().replaceAllMapped(
+    return priceInEGP.toInt().toString().replaceAllMapped(
           RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
           (Match m) => '${m[1]},',
-        )}';
+        );
   }
 
   String _formatAccountDetails(BuyAccountModel account) {
@@ -625,7 +625,7 @@ class _AccountDetailsContentState extends State<_AccountDetailsContent> {
     final words = text.split(' ');
 
     if (words.length > 500) {
-      return words.take(500).join(' ') + '...';
+      return '${words.take(500).join(' ')}...';
     }
 
     return text.trim();

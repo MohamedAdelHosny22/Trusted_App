@@ -3,23 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trusted_app/core/theme/app_shadows.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../cubit/splash_cubit.dart';
 import '../cubit/splash_state.dart';
 import '../widgets/splash_background.dart';
 
-/// SplashScreen - App splash screen
-///
-/// Features:
-/// - Show app logo with glow effect
-/// - Check authentication status
-/// - Navigate to appropriate screen
-///
-/// Architecture:
-/// - UI → Cubit (navigation logic)
-/// - BlocListener handles navigation
-/// - Zero hardcoded styles
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
@@ -38,7 +26,10 @@ class _SplashContent extends StatelessWidget {
   void _listenToSplashState(BuildContext context, SplashState state) {
     switch (state.status) {
       case SplashStatus.navigateHome:
-        context.go('/main?tab=4'); // Navigate to main with Profile tab
+        context.go('/main?tab=4');
+        break;
+      case SplashStatus.navigateMediator:
+        context.go('/mediator?tab=0');
         break;
       case SplashStatus.navigateOnboarding:
         context.go('/onboarding');
@@ -53,31 +44,30 @@ class _SplashContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: BlocListener<SplashCubit, SplashState>(
         listener: _listenToSplashState,
         child: Stack(
           children: [
-            // Background gradient
             const SplashBackground(),
 
-            // Centered content (vertical layout: logo on top, text below)
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Logo image only (no text)
                   Container(
                     width: 128,
                     height: 128,
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
-                      color: AppColors.primaryMaterial.shade800,
+                      color: theme.colorScheme.primary.withValues(alpha: 0.2), // Replace shade800
                       boxShadow: AppShadows.primaryGlow,
                       borderRadius: BorderRadius.circular(24),
                       border: Border.all(
-                        color: AppColors.primaryMaterial.shade600,
+                        color: theme.colorScheme.primary.withValues(alpha: 0.4), // Replace shade600
                         width: 0.6,
                       ),
                     ),
@@ -90,15 +80,12 @@ class _SplashContent extends StatelessWidget {
                   ),
 
                   SizedBox(height: AppSpacing.m),
-                  // "Trusted" text below logo
                   Text(
                     'Trusted',
-                    style: TextStyle(
+                    style: theme.textTheme.displayLarge?.copyWith(
                       fontSize: 32,
-                      fontWeight: FontWeight.w700,
                       height: 40 / 32,
                       letterSpacing: 4.8,
-                      color: AppColors.textPrimary,
                       fontStyle: FontStyle.italic,
                     ),
                   ),

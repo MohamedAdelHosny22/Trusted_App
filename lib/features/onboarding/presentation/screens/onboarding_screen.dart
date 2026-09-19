@@ -1,20 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../cubit/onboarding_cubit.dart';
 import '../cubit/onboarding_state.dart';
 import '../widgets/onboarding_bottom_sheet.dart';
 import '../widgets/onboarding_page_view.dart';
 import '../widgets/onboarding_top_bar.dart';
 
-/// OnboardingScreen - App onboarding flow
-///
-/// Features:
-/// - Multi-page onboarding experience
-/// - Progress indicators
-/// - Navigation controls
-/// - Completion tracking
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
 
@@ -36,7 +28,6 @@ class _OnboardingContent extends StatefulWidget {
 
 class _OnboardingContentState extends State<_OnboardingContent> {
   late PageController _pageController;
-  int _currentPage = 0;
 
   @override
   void initState() {
@@ -55,13 +46,15 @@ class _OnboardingContentState extends State<_OnboardingContent> {
       context.go('/auth/login');
     }
 
-    if (_currentPage != state.currentPage && _pageController.hasClients) {
-      _pageController.animateToPage(
-        state.currentPage,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-      _currentPage = state.currentPage;
+    if (_pageController.hasClients) {
+      final currentViewPage = _pageController.page?.round() ?? 0;
+      if (currentViewPage != state.currentPage) {
+        _pageController.animateToPage(
+          state.currentPage,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
     }
   }
 
@@ -78,16 +71,14 @@ class _OnboardingContentState extends State<_OnboardingContent> {
   }
 
   void _onPageChanged(int page) {
-    setState(() {
-      _currentPage = page;
-    });
     context.read<OnboardingCubit>().goToPage(page);
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: BlocConsumer<OnboardingCubit, OnboardingState>(
         listener: _listenToOnboardingState,
         builder: (context, state) {

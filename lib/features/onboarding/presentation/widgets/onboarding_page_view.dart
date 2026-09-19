@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/onboarding_page_content.dart';
 
-/// OnboardingPageView - PageView builder for onboarding screens
-///
-/// Features:
-/// - 3 pages of onboarding content
-/// - Page change callback
 class OnboardingPageView extends StatelessWidget {
   final PageController controller;
   final ValueChanged<int> onPageChanged;

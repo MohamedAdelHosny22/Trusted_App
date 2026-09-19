@@ -4,9 +4,6 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/buttons.dart';
 import 'onboarding_progress.dart';
 
-/// OnboardingBottomSheet - Bottom action area for onboarding
-///
-/// Contains progress indicator and action button
 class OnboardingBottomSheet extends StatelessWidget {
   final int currentPage;
   final int totalPages;

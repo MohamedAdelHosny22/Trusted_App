@@ -79,7 +79,7 @@ class MediatorSelectorBottomSheet extends StatelessWidget {
                 return ListView.separated(
                   padding: const EdgeInsets.all(AppSpacing.m),
                   itemCount: mediators.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.m),
+                  separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.m),
                   itemBuilder: (context, index) {
                     final mediator = mediators[index];
                     return _MediatorListItem(

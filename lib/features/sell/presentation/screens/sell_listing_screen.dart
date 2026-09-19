@@ -171,7 +171,8 @@ class _SellListingContentState extends State<_SellListingContent> {
           Icons.arrow_back_ios_new,
           color: AppColors.textPrimary,
         ),
-        onPressed: () => context.go('/main?tab=0'),
+        // Go back to mediator dashboard
+        onPressed: () => context.go('/mediator?tab=0'),
       ),
       centerTitle: true,
       title: Text(
@@ -579,7 +580,7 @@ class _SellListingContentState extends State<_SellListingContent> {
             if (selectedMediatorsCount < 3) ...[
               const SizedBox(height: AppSpacing.xs),
               Text(
-                'Select at least 3 mediators (${selectedMediatorsCount}/3 selected)',
+                'Select at least 3 mediators ($selectedMediatorsCount/3 selected)',
                 style: AppTextStyles.caption.copyWith(
                   color: AppColors.error,
                 ),

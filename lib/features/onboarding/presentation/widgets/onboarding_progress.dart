@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 
-/// OnboardingProgress - Page indicator for onboarding
-///
-/// Shows dots for each page with animation
 class OnboardingProgress extends StatelessWidget {
   final int currentPage;
   final int totalPages;
@@ -17,6 +13,11 @@ class OnboardingProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final borderCol = theme.brightness == Brightness.dark 
+        ? Colors.white12 
+        : Colors.black12;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.xl),
       child: Row(
@@ -29,12 +30,12 @@ class OnboardingProgress extends StatelessWidget {
             height: isActive ? 10 : 8,
             width: isActive ? 32 : 8,
             decoration: BoxDecoration(
-              color: isActive ? AppColors.primary : AppColors.border,
+              color: isActive ? theme.colorScheme.primary : borderCol,
               borderRadius: BorderRadius.circular(isActive ? 5 : 4),
               boxShadow: isActive
                   ? [
                       BoxShadow(
-                        color: AppColors.primary.withValues(alpha: 0.6),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.6),
                         blurRadius: 8,
                         spreadRadius: 0,
                       ),

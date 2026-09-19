@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -228,10 +229,8 @@ void _showLogoutDialog(BuildContext context) {
         TextButton(
           onPressed: () {
             Navigator.of(dialogContext).pop();
-            // TODO: Implement logout logic
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Logging out...')),
-            );
+            // Navigate to login screen (logout)
+            context.go('/auth/login');
           },
           child: Text(
             'Logout',
@@ -292,7 +291,7 @@ class _QuickActionItem extends StatelessWidget {
                 ),
               ),
             ),
-            if (trailing != null) trailing!,
+            ?trailing,
           ],
         ),
       ),
