@@ -1,12 +1,10 @@
-/// OnboardingStatus - Onboarding completion status
 enum OnboardingStatus {
-  initial,   // Initial state
-  loading,   // Completing onboarding
-  completed, // Onboarding completed
-  failure,   // Onboarding failed
+  initial,
+  loading,
+  completed,
+  failure,
 }
 
-/// OnboardingState - Onboarding screen state
 class OnboardingState {
   final OnboardingStatus status;
   final int currentPage;

@@ -79,7 +79,7 @@ class AppListTile extends StatelessWidget {
                   ],
                 ),
               ),
-              if (trailing != null) trailing!,
+              ?trailing,
               if (showChevron && trailing == null)
                 Icon(
                   Icons.chevron_right,

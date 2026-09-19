@@ -1,27 +1,39 @@
-/// SplashStatus - Splash screen navigation status
+import '../../../../core/models/user_role.dart';
 enum SplashStatus {
-  initial,      // Initial state
-  checking,     // Checking auth status
-  navigateHome, // Navigate to home (authenticated)
-  navigateOnboarding, // Navigate to onboarding (first time)
-  navigateLogin, // Navigate to login (returning user)
+  initial,
+  checking,
+  navigateHome,
+  navigateMediator,
+  navigateOnboarding,
+  navigateLogin,
 }
 
-/// SplashState - Splash screen state
 class SplashState {
   final SplashStatus status;
+  final UserRole? userRole;
 
-  const SplashState({this.status = SplashStatus.initial});
+  const SplashState({
+    this.status = SplashStatus.initial,
+    this.userRole,
+  });
 
-  SplashState copyWith({SplashStatus? status}) {
-    return SplashState(status: status ?? this.status);
+  SplashState copyWith({
+    SplashStatus? status,
+    UserRole? userRole,
+  }) {
+    return SplashState(
+      status: status ?? this.status,
+      userRole: userRole ?? this.userRole,
+    );
   }
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SplashState && other.status == status;
+      other is SplashState &&
+          other.status == status &&
+          other.userRole == userRole;
 
   @override
-  int get hashCode => status.hashCode;
+  int get hashCode => status.hashCode ^ userRole.hashCode;
 }

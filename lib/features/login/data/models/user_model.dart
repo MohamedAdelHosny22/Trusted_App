@@ -1,3 +1,5 @@
+import '../../../../core/models/user_role.dart';
+
 /// UserModel - User data entity
 ///
 /// Represents user information returned after successful authentication
@@ -7,6 +9,7 @@ class UserModel {
   final String? email;
   final String? displayName;
   final DateTime? createdAt;
+  final UserRole role;
 
   const UserModel({
     required this.id,
@@ -14,6 +17,7 @@ class UserModel {
     this.email,
     this.displayName,
     this.createdAt,
+    this.role = UserRole.user,
   });
 
   /// Create UserModel from JSON (API response)
@@ -26,6 +30,9 @@ class UserModel {
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'] as String)
           : null,
+      role: json['role'] != null
+          ? UserRoleExtension.fromString(json['role'] as String)
+          : UserRole.user,
     );
   }
 
@@ -37,6 +44,7 @@ class UserModel {
       'email': email,
       'display_name': displayName,
       'created_at': createdAt?.toIso8601String(),
+      'role': role.name,
     };
   }
 
@@ -47,6 +55,7 @@ class UserModel {
     String? email,
     String? displayName,
     DateTime? createdAt,
+    UserRole? role,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -54,6 +63,7 @@ class UserModel {
       email: email ?? this.email,
       displayName: displayName ?? this.displayName,
       createdAt: createdAt ?? this.createdAt,
+      role: role ?? this.role,
     );
   }
 
@@ -81,7 +91,8 @@ class UserModel {
         other.id == id &&
         other.username == username &&
         other.email == email &&
-        other.displayName == displayName;
+        other.displayName == displayName &&
+        other.role == role;
   }
 
   @override
@@ -89,6 +100,7 @@ class UserModel {
     return id.hashCode ^
         username.hashCode ^
         email.hashCode ^
-        displayName.hashCode;
+        displayName.hashCode ^
+        role.hashCode;
   }
 }

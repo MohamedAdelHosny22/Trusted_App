@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_padding.dart';
 import '../../../../core/widgets/app_auth_background.dart';
+import '../../../../core/models/user_role.dart';
 import '../../data/data_sources/login_remote_data_source.dart';
 import '../../data/repositories/login_repository.dart';
 import '../cubit/login_cubit.dart';
@@ -67,8 +68,19 @@ class _LoginContentState extends State<_LoginContent> {
   }
 
   void _listenToLoginState(BuildContext context, LoginState state) {
-    if (state.isSuccess) {
-      context.go('/main?tab=0'); // Navigate to Home tab
+    if (state.isSuccess && state.user != null) {
+      // Check user role and navigate accordingly
+      switch (state.user!.role) {
+        case UserRole.mediator:
+          // Mediator goes to mediator nav shell
+          context.go('/mediator');
+          break;
+        case UserRole.user:
+        default:
+          // Regular user goes to main app
+          context.go('/main?tab=0'); // Navigate to Home tab
+          break;
+      }
     } else if (state.isFailure && state.errorMessage != null) {
       _showErrorSnackBar(context, state.errorMessage!);
     }

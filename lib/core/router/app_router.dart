@@ -19,7 +19,9 @@ import '../../features/chat/data/models/chat_model.dart';
 import '../../features/profile/presentation/screens/all_listings_screen.dart';
 import '../../features/profile/presentation/screens/add_listing_screen.dart';
 import '../../features/sell/presentation/screens/sell_listing_screen.dart';
+import '../../features/mediator_dashboard/presentation/screens/mediator_dashboard_screen.dart';
 import '../../core/widgets/main_nav_shell.dart';
+import '../../core/widgets/mediator_nav_shell.dart';
 
 /// App Router Configuration
 ///
@@ -103,6 +105,25 @@ class AppRouter {
             return MaterialPage(
               key: state.pageKey,
               child: MainNavShell(initialIndex: initialTab),
+            );
+          },
+        ),
+
+        // Mediator Navigation Shell (Authenticated Mediators)
+        GoRoute(
+          path: '/mediator',
+          name: 'mediator',
+          pageBuilder: (context, state) {
+            // Get initial tab index from query parameter or default to 0 (dashboard)
+            // Indices: 0=Dashboard, 1=Buy, 2=Sell, 3=Chats, 4=Profile
+            final initialTab = int.tryParse(
+                  state.uri.queryParameters['tab'] ?? '0',
+                ) ??
+                0;
+
+            return MaterialPage(
+              key: state.pageKey,
+              child: MediatorNavShell(initialIndex: initialTab),
             );
           },
         ),
@@ -270,6 +291,18 @@ class AppRouter {
             return MaterialPage(
               key: state.pageKey,
               child: const SellListingScreen(),
+            );
+          },
+        ),
+
+        // Mediator Dashboard Screen
+        GoRoute(
+          path: '/mediator-dashboard',
+          name: 'mediator-dashboard',
+          pageBuilder: (context, state) {
+            return MaterialPage(
+              key: state.pageKey,
+              child: const MediatorDashboardScreen(),
             );
           },
         ),
