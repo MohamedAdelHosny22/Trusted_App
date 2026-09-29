@@ -1,79 +1,100 @@
 import 'user_model.dart';
+import '../../../../core/models/user_role.dart';
 
 /// LoginResponse - Authentication response model
-///
-/// Contains user data and authentication token from successful login
 class LoginResponse {
-  final UserModel user;
-  final String accessToken;
-  final String? refreshToken;
-  final int expiresIn; // seconds until token expires
+  final bool isSuccess;
+  final String? arRes;
+  final String? enRes;
+  final UserModel? user;
+  final String? accessToken;
+  final DateTime? expiresAt;
+  final int statusCode;
+  final List<dynamic>? errors;
 
   const LoginResponse({
-    required this.user,
-    required this.accessToken,
-    this.refreshToken,
-    required this.expiresIn,
+    required this.isSuccess,
+    this.arRes,
+    this.enRes,
+    this.user,
+    this.accessToken,
+    this.expiresAt,
+    required this.statusCode,
+    this.errors,
   });
 
   /// Create from JSON (API response)
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
+    UserModel? user;
+    String? token;
+    DateTime? expAt;
+
+    if (json['data'] != null) {
+      final data = json['data'] as Map<String, dynamic>;
+      token = data['token'] as String?;
+      if (data['expiresAt'] != null) {
+        expAt = DateTime.tryParse(data['expiresAt'] as String);
+      }
+      
+      user = UserModel(
+        email: data['email'] as String?,
+        role: data['role'] != null 
+            ? UserRoleExtension.fromString(data['role'] as String) 
+            : UserRole.user,
+      );
+    }
+
     return LoginResponse(
-      user: UserModel.fromJson(json['user'] as Map<String, dynamic>),
-      accessToken: json['access_token'] as String,
-      refreshToken: json['refresh_token'] as String?,
-      expiresIn: json['expires_in'] as int,
+      isSuccess: json['isSuccess'] == true,
+      arRes: json['arRes'] as String?,
+      enRes: json['enRes'] as String?,
+      user: user,
+      accessToken: token,
+      expiresAt: expAt,
+      statusCode: json['statusCode'] as int? ?? 200,
+      errors: json['errors'] as List<dynamic>?,
     );
   }
 
   /// Convert to JSON (for testing or caching)
   Map<String, dynamic> toJson() {
     return {
-      'user': user.toJson(),
-      'access_token': accessToken,
-      'refresh_token': refreshToken,
-      'expires_in': expiresIn,
+      'isSuccess': isSuccess,
+      'arRes': arRes,
+      'enRes': enRes,
+      'data': user != null ? {
+        'token': accessToken,
+        'expiresAt': expiresAt?.toIso8601String(),
+        'email': user?.email,
+        'role': user?.role.name,
+      } : null,
+      'statusCode': statusCode,
+      'errors': errors,
     };
   }
 
   /// Check if token is expired
   bool isTokenExpired() {
-    // This is a simplified check
-    // In production, you'd store the expiry timestamp and compare
-    return false;
+    if (expiresAt == null) return true;
+    return DateTime.now().isAfter(expiresAt!);
   }
 
   /// Create a mock response for testing
   factory LoginResponse.mock() {
     return LoginResponse(
+      isSuccess: true,
+      arRes: 'تم تسجيل الدخول بنجاح',
+      enRes: 'Login successful.',
       user: UserModel.mock(),
       accessToken: 'mock-access-token-12345',
-      refreshToken: 'mock-refresh-token-67890',
-      expiresIn: 3600, // 1 hour
+      expiresAt: DateTime.now().add(const Duration(days: 1)),
+      statusCode: 200,
+      errors: [],
     );
   }
 
   @override
   String toString() {
-    return 'LoginResponse(user: $user, accessToken: ***, expiresIn: $expiresIn)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is LoginResponse &&
-        other.user == user &&
-        other.accessToken == accessToken &&
-        other.refreshToken == refreshToken &&
-        other.expiresIn == expiresIn;
-  }
-
-  @override
-  int get hashCode {
-    return user.hashCode ^
-        accessToken.hashCode ^
-        refreshToken.hashCode ^
-        expiresIn.hashCode;
+    return 'LoginResponse(isSuccess: $isSuccess, user: $user, accessToken: ***)';
   }
 }

@@ -2,91 +2,84 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/repositories/signup_repository.dart';
 import 'signup_state.dart';
 
-/// SignupCubit - State management for signup feature
-///
-/// Responsibilities:
-/// - Validate user input
-/// - Call repository for registration
-/// - Emit state changes for UI to react
-///
-/// NOT responsible for:
-/// - Navigation (UI handles this via BlocListener)
-/// - Showing snackbars (UI handles this via BlocListener)
-/// - Direct API calls (delegated to Repository)
 class SignupCubit extends Cubit<SignupState> {
   final SignupRepository _repository;
 
   SignupCubit(this._repository) : super(const SignupState.initial());
 
-  /// Register new user with credentials
-  ///
-  /// Validates input, calls repository, and emits appropriate states
   Future<void> signup({
-    required String username,
-    required String phone,
+    required String firstName,
+    required String lastName,
+    required String userName,
     required String email,
     required String password,
+    required String phoneNumber,
   }) async {
-    // Validate input
-    final validationResult = _validateSignupData(username, phone, email, password);
+    final validationResult = _validateSignupData(
+      firstName,
+      lastName,
+      userName,
+      email,
+      password,
+      phoneNumber,
+    );
+
     if (validationResult != null) {
       emit(state.asFailure(validationResult));
       return;
     }
 
-    // Emit loading state
     emit(state.asLoading());
 
     try {
-      // Call repository (async operation)
       final user = await _repository.signup(
-        username: username,
-        phone: phone,
+        firstName: firstName,
+        lastName: lastName,
+        userName: userName,
         email: email,
         password: password,
+        phoneNumber: phoneNumber,
       );
       emit(state.asSuccess(user));
     } on SignupFailure catch (error) {
-      // Typed error from repository
       emit(state.asFailure(error.message));
     } catch (error) {
-      // Unexpected error
       emit(state.asFailure('Registration failed. Please try again.'));
     }
   }
 
-  /// Validate signup data before attempting registration
-  ///
-  /// Returns error message if validation fails, null if valid
-  String? _validateSignupData(String username, String phone, String email, String password) {
-    // Username validation
-    if (username.isEmpty) {
+  String? _validateSignupData(
+    String firstName,
+    String lastName,
+    String userName,
+    String email,
+    String password,
+    String phoneNumber,
+  ) {
+    if (firstName.trim().isEmpty) {
+      return 'First name is required';
+    }
+
+    if (lastName.trim().isEmpty) {
+      return 'Last name is required';
+    }
+
+    if (userName.trim().isEmpty) {
       return 'Username is required';
     }
 
-    if (username.length < 3) {
+    if (userName.length < 3) {
       return 'Username must be at least 3 characters';
     }
 
-    // Phone validation
-    if (phone.isEmpty) {
-      return 'Phone number is required';
-    }
-
-    if (phone.length < 10) {
-      return 'Phone number must be at least 10 digits';
-    }
-
-    // Email validation
-    if (email.isEmpty) {
+    if (email.trim().isEmpty) {
       return 'Email is required';
     }
 
-    if (!_isValidEmail(email)) {
-      return 'Please enter a valid email address';
+    if (!email.trim().toLowerCase().endsWith('@gmail.com')) {
+      return 'Currently, only @gmail.com email addresses are supported.';
     }
 
-    // Password validation
     if (password.isEmpty) {
       return 'Password is required';
     }
@@ -95,18 +88,13 @@ class SignupCubit extends Cubit<SignupState> {
       return 'Password must be at least 6 characters';
     }
 
+    if (phoneNumber.trim().isEmpty) {
+      return 'Phone number is required';
+    }
+
     return null; // Valid
   }
 
-  /// Basic email format validation
-  bool _isValidEmail(String email) {
-    // Simple email validation regex
-    // In production, you might want to use a more robust validation
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    return emailRegex.hasMatch(email);
-  }
-
-  /// Reset state to initial (useful for retry)
   void reset() {
     emit(const SignupState.initial());
   }

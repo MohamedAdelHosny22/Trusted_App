@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_primary_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 
-/// SignupForm - Signup form with username, phone, email, and password fields
-///
-/// Features:
-/// - Username input with validation
-/// - Phone number input with validation
-/// - Email input with validation
-/// - Password input with visibility toggle
-/// - Submit button with loading state
 class SignupForm extends StatelessWidget {
+  final TextEditingController firstNameController;
+  final TextEditingController lastNameController;
   final TextEditingController usernameController;
   final TextEditingController phoneController;
   final TextEditingController emailController;
@@ -23,6 +16,8 @@ class SignupForm extends StatelessWidget {
 
   const SignupForm({
     super.key,
+    required this.firstNameController,
+    required this.lastNameController,
     required this.usernameController,
     required this.phoneController,
     required this.emailController,
@@ -38,6 +33,25 @@ class SignupForm extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: _FirstNameField(
+                controller: firstNameController,
+                isLoading: isLoading,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _LastNameField(
+                controller: lastNameController,
+                isLoading: isLoading,
+              ),
+            ),
+          ],
+        ),
+
         _UsernameField(
           controller: usernameController,
           isLoading: isLoading,
@@ -70,6 +84,56 @@ class SignupForm extends StatelessWidget {
   }
 }
 
+class _FirstNameField extends StatelessWidget {
+  final TextEditingController controller;
+  final bool isLoading;
+
+  const _FirstNameField({
+    required this.controller,
+    required this.isLoading,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AppTextField(
+      label: 'First Name',
+      hint: 'Enter your first name',
+      controller: controller,
+      enabled: !isLoading,
+      prefixIcon: Icon(
+        Icons.person_outline,
+        size: 16,
+        color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
+      ),
+    );
+  }
+}
+
+class _LastNameField extends StatelessWidget {
+  final TextEditingController controller;
+  final bool isLoading;
+
+  const _LastNameField({
+    required this.controller,
+    required this.isLoading,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AppTextField(
+      label: 'Last Name',
+      hint: 'Enter your last name',
+      controller: controller,
+      enabled: !isLoading,
+      prefixIcon: Icon(
+        Icons.person_outline,
+        size: 16,
+        color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
+      ),
+    );
+  }
+}
+
 class _UsernameField extends StatelessWidget {
   final TextEditingController controller;
   final bool isLoading;
@@ -86,10 +150,10 @@ class _UsernameField extends StatelessWidget {
       hint: 'Enter your username',
       controller: controller,
       enabled: !isLoading,
-      prefixIcon: const Icon(
+      prefixIcon: Icon(
         Icons.person,
         size: 16,
-        color: AppColors.textSecondary,
+        color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
       ),
     );
   }
@@ -112,10 +176,10 @@ class _PhoneField extends StatelessWidget {
       controller: controller,
       enabled: !isLoading,
       keyboardType: TextInputType.phone,
-      prefixIcon: const Icon(
+      prefixIcon: Icon(
         Icons.phone,
         size: 16,
-        color: AppColors.textSecondary,
+        color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
       ),
     );
   }
@@ -137,10 +201,11 @@ class _EmailField extends StatelessWidget {
       hint: 'Enter your email',
       controller: controller,
       enabled: !isLoading,
-      prefixIcon: const Icon(
+      keyboardType: TextInputType.emailAddress,
+      prefixIcon: Icon(
         Icons.email_outlined,
         size: 16,
-        color: AppColors.textSecondary,
+        color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
       ),
     );
   }
@@ -167,10 +232,10 @@ class _PasswordField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       enabled: !isLoading,
-      prefixIcon: const Icon(
+      prefixIcon: Icon(
         Icons.lock,
         size: 21,
-        color: AppColors.textSecondary,
+        color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
       ),
       suffixIcon: _PasswordVisibilityToggle(
         isVisible: !obscureText,
@@ -196,7 +261,7 @@ class _PasswordVisibilityToggle extends StatelessWidget {
       child: Icon(
         isVisible ? Icons.visibility_off : Icons.visibility,
         size: 22,
-        color: AppColors.textSecondary,
+        color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
       ),
     );
   }

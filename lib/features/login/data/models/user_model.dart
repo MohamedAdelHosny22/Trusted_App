@@ -4,16 +4,16 @@ import '../../../../core/models/user_role.dart';
 ///
 /// Represents user information returned after successful authentication
 class UserModel {
-  final String id;
-  final String username;
+  final String? id;
+  final String? username;
   final String? email;
   final String? displayName;
   final DateTime? createdAt;
   final UserRole role;
 
   const UserModel({
-    required this.id,
-    required this.username,
+    this.id,
+    this.username,
     this.email,
     this.displayName,
     this.createdAt,
@@ -23,8 +23,8 @@ class UserModel {
   /// Create UserModel from JSON (API response)
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'] as String,
-      username: json['username'] as String,
+      id: json['id'] as String?,
+      username: json['username'] as String?,
       email: json['email'] as String?,
       displayName: json['display_name'] as String?,
       createdAt: json['created_at'] != null
