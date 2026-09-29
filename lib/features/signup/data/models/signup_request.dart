@@ -1,42 +1,52 @@
 /// SignupRequest - User registration credentials model
-///
-/// Encapsulates username, phone, email, and password for registration requests
 class SignupRequest {
-  final String username;
-  final String phone;
+  final String firstName;
+  final String lastName;
+  final String userName;
   final String email;
   final String password;
+  final String ipAddress;
+  final String phoneNumber;
 
   const SignupRequest({
-    required this.username,
-    required this.phone,
+    required this.firstName,
+    required this.lastName,
+    required this.userName,
     required this.email,
     required this.password,
+    required this.ipAddress,
+    required this.phoneNumber,
   });
 
   /// Convert to JSON for API request
   Map<String, dynamic> toJson() {
     return {
-      'username': username,
-      'phone': phone,
+      'firstName': firstName,
+      'lastName': lastName,
+      'userName': userName,
       'email': email,
       'password': password,
+      'ipAddress': ipAddress,
+      'phoneNumber': phoneNumber,
     };
   }
 
   /// Create from JSON (for testing or caching)
   factory SignupRequest.fromJson(Map<String, dynamic> json) {
     return SignupRequest(
-      username: json['username'] as String,
-      phone: json['phone'] as String,
+      firstName: json['firstName'] as String,
+      lastName: json['lastName'] as String,
+      userName: json['userName'] as String,
       email: json['email'] as String,
       password: json['password'] as String,
+      ipAddress: json['ipAddress'] as String,
+      phoneNumber: json['phoneNumber'] as String,
     );
   }
 
   @override
   String toString() {
-    return 'SignupRequest(username: $username, phone: $phone, email: $email, password: ***)';
+    return 'SignupRequest(userName: $userName, email: $email, password: ***)';
   }
 
   @override
@@ -44,12 +54,23 @@ class SignupRequest {
     if (identical(this, other)) return true;
 
     return other is SignupRequest &&
-        other.username == username &&
-        other.phone == phone &&
+        other.firstName == firstName &&
+        other.lastName == lastName &&
+        other.userName == userName &&
         other.email == email &&
-        other.password == password;
+        other.password == password &&
+        other.ipAddress == ipAddress &&
+        other.phoneNumber == phoneNumber;
   }
 
   @override
-  int get hashCode => username.hashCode ^ phone.hashCode ^ email.hashCode ^ password.hashCode;
+  int get hashCode {
+    return firstName.hashCode ^
+        lastName.hashCode ^
+        userName.hashCode ^
+        email.hashCode ^
+        password.hashCode ^
+        ipAddress.hashCode ^
+        phoneNumber.hashCode;
+  }
 }

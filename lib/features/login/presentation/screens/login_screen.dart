@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_padding.dart';
 import '../../../../core/widgets/app_auth_background.dart';
 import '../../../../core/models/user_role.dart';
@@ -33,7 +32,7 @@ class LoginScreen extends StatelessWidget {
   }
 
   LoginCubit _createLoginCubit() {
-    final remoteDataSource = const LoginRemoteDataSourceImpl();
+    final remoteDataSource = LoginRemoteDataSourceImpl();
     final repository = LoginRepositoryImpl(
       remoteDataSource: remoteDataSource,
     );
@@ -49,20 +48,20 @@ class _LoginContent extends StatefulWidget {
 }
 
 class _LoginContentState extends State<_LoginContent> {
-  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
   @override
   void dispose() {
-    _usernameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
   void _handleLogin() {
     context.read<LoginCubit>().login(
-      username: _usernameController.text.trim(),
+      email: _emailController.text.trim(),
       password: _passwordController.text,
     );
   }
@@ -90,7 +89,7 @@ class _LoginContentState extends State<_LoginContent> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: AppColors.error,
+        backgroundColor: Theme.of(context).colorScheme.error,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -99,7 +98,7 @@ class _LoginContentState extends State<_LoginContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: BlocConsumer<LoginCubit, LoginState>(
         listener: _listenToLoginState,
         builder: (context, state) {
@@ -117,7 +116,7 @@ class _LoginContentState extends State<_LoginContent> {
                       const LoginHeader(),
 
                       LoginForm(
-                        usernameController: _usernameController,
+                        emailController: _emailController,
                         passwordController: _passwordController,
                         isPasswordVisible: _isPasswordVisible,
                         isLoading: isLoading,

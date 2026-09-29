@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_padding.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/app_auth_background.dart';
@@ -33,7 +32,7 @@ class SignupScreen extends StatelessWidget {
   }
 
   SignupCubit _createSignupCubit() {
-    final remoteDataSource = const SignupRemoteDataSourceImpl();
+    final remoteDataSource = SignupRemoteDataSourceImpl();
     final repository = SignupRepositoryImpl(
       remoteDataSource: remoteDataSource,
     );
@@ -49,6 +48,8 @@ class _SignupContent extends StatefulWidget {
 }
 
 class _SignupContentState extends State<_SignupContent> {
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
   final _usernameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
@@ -57,6 +58,8 @@ class _SignupContentState extends State<_SignupContent> {
 
   @override
   void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
     _usernameController.dispose();
     _phoneController.dispose();
     _emailController.dispose();
@@ -65,11 +68,23 @@ class _SignupContentState extends State<_SignupContent> {
   }
 
   void _handleSignup() {
+    String phone = _phoneController.text.trim();
+    
+    // Add Egypt country code if not present
+    if (phone.isNotEmpty && !phone.startsWith('+')) {
+      if (phone.startsWith('0')) {
+        phone = phone.substring(1);
+      }
+      phone = '+20$phone';
+    }
+
     context.read<SignupCubit>().signup(
-      username: _usernameController.text.trim(),
-      phone: _phoneController.text.trim(),
+      firstName: _firstNameController.text.trim(),
+      lastName: _lastNameController.text.trim(),
+      userName: _usernameController.text.trim(),
       email: _emailController.text.trim(),
       password: _passwordController.text,
+      phoneNumber: phone,
     );
   }
 
@@ -85,7 +100,7 @@ class _SignupContentState extends State<_SignupContent> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: AppColors.error,
+        backgroundColor: Theme.of(context).colorScheme.error,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -96,7 +111,7 @@ class _SignupContentState extends State<_SignupContent> {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: BlocConsumer<SignupCubit, SignupState>(
           listener: _listenToSignupState,
           builder: (context, state) {
@@ -118,6 +133,8 @@ class _SignupContentState extends State<_SignupContent> {
                         ),
 
                         SignupForm(
+                          firstNameController: _firstNameController,
+                          lastNameController: _lastNameController,
                           usernameController: _usernameController,
                           phoneController: _phoneController,
                           emailController: _emailController,
@@ -147,3 +164,4 @@ class _SignupContentState extends State<_SignupContent> {
     );
   }
 }
+

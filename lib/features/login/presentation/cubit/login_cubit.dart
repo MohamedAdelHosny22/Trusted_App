@@ -18,15 +18,15 @@ class LoginCubit extends Cubit<LoginState> {
 
   LoginCubit(this._repository) : super(const LoginState.initial());
 
-  /// Authenticate user with username and password
+  /// Authenticate user with email and password
   ///
   /// Validates input, calls repository, and emits appropriate states
   Future<void> login({
-    required String username,
+    required String email,
     required String password,
   }) async {
     // Validate input
-    final validationResult = _validateCredentials(username, password);
+    final validationResult = _validateCredentials(email, password);
     if (validationResult != null) {
       emit(state.asFailure(validationResult));
       return;
@@ -38,7 +38,7 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       // Call repository (async operation)
       final user = await _repository.login(
-        username: username,
+        email: email,
         password: password,
       );
       emit(state.asSuccess(user));
@@ -51,24 +51,20 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  /// Validate username and password before attempting login
+  /// Validate email and password before attempting login
   ///
   /// Returns error message if validation fails, null if valid
-  String? _validateCredentials(String username, String password) {
-    if (username.isEmpty) {
-      return 'Username is required';
+  String? _validateCredentials(String email, String password) {
+    if (email.isEmpty) {
+      return 'Email is required';
     }
 
-    if (username.length < 3) {
-      return 'Username must be at least 3 characters';
+    if (!email.trim().toLowerCase().endsWith('@gmail.com')) {
+      return 'Currently, only @gmail.com email addresses are supported.';
     }
 
     if (password.isEmpty) {
       return 'Password is required';
-    }
-
-    if (password.length < 6) {
-      return 'Password must be at least 6 characters';
     }
 
     return null; // Valid

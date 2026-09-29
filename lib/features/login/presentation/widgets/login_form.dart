@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_primary_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import 'forgot_password_link.dart';
 
-/// LoginForm - Login form with username and password fields
-///
-/// Features:
-/// - Username input with validation
-/// - Password input with visibility toggle
-/// - Forgot password link
-/// - Submit button with loading state
+/// LoginForm - Login form with email and password fields
 class LoginForm extends StatelessWidget {
-  final TextEditingController usernameController;
+  final TextEditingController emailController;
   final TextEditingController passwordController;
   final bool isPasswordVisible;
   final bool isLoading;
@@ -21,7 +14,7 @@ class LoginForm extends StatelessWidget {
 
   const LoginForm({
     super.key,
-    required this.usernameController,
+    required this.emailController,
     required this.passwordController,
     required this.isPasswordVisible,
     required this.isLoading,
@@ -34,8 +27,8 @@ class LoginForm extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _UsernameField(
-          controller: usernameController,
+        _EmailField(
+          controller: emailController,
           isLoading: isLoading,
         ),
 
@@ -58,11 +51,11 @@ class LoginForm extends StatelessWidget {
   }
 }
 
-class _UsernameField extends StatelessWidget {
+class _EmailField extends StatelessWidget {
   final TextEditingController controller;
   final bool isLoading;
 
-  const _UsernameField({
+  const _EmailField({
     required this.controller,
     required this.isLoading,
   });
@@ -70,14 +63,15 @@ class _UsernameField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppTextField(
-      label: 'Username',
-      hint: 'Enter your username',
+      label: 'Email Address',
+      hint: 'Enter your email address',
       controller: controller,
       enabled: !isLoading,
-      prefixIcon: const Icon(
-        Icons.person,
+      keyboardType: TextInputType.emailAddress,
+      prefixIcon: Icon(
+        Icons.email,
         size: 16,
-        color: AppColors.textSecondary,
+        color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
       ),
     );
   }
@@ -104,10 +98,10 @@ class _PasswordField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       enabled: !isLoading,
-      prefixIcon: const Icon(
+      prefixIcon: Icon(
         Icons.lock,
         size: 21,
-        color: AppColors.textSecondary,
+        color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
       ),
       suffixIcon: _PasswordVisibilityToggle(
         isVisible: !obscureText,
@@ -133,7 +127,7 @@ class _PasswordVisibilityToggle extends StatelessWidget {
       child: Icon(
         isVisible ? Icons.visibility_off : Icons.visibility,
         size: 22,
-        color: AppColors.textSecondary,
+        color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
       ),
     );
   }
